@@ -7,7 +7,8 @@ WORKDIR /app
 # Copy and build project
 COPY demo /app/demo
 WORKDIR /app/demo
-RUN ./mvnw clean package
+RUN chmod +x mvnw && ./mvnw clean package
+
 
 # Run the Spring Boot app
 CMD ["java", "-jar", "target/demo-0.0.1-SNAPSHOT.jar"]
