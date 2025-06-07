@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>筆記列表</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>筆記列表</h1>
+<ul>
+    <li th:each="note : ${notes}">
+        <p th:text="${note.content}">筆記內容</p>
+        <p>分享對象：<span th:text="${note.shared}">無</span></p>
+    </li>
+</ul>
+</body>
+</html>
+
