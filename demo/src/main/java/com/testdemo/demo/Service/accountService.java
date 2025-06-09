@@ -58,6 +58,7 @@ public String updateAccount(String account, accountsEntity updateData) {
         accountsEntity acc = existing.get();
         acc.setName(updateData.getName());
         acc.setPassword(updateData.getPassword());
+        acc.setEmail(updateData.getEmail());
         accountRepository.save(acc);
         return "修改成功";
     } else {
