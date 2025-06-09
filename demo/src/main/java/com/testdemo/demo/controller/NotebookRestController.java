@@ -96,5 +96,50 @@ public class NotebookRestController {
             return ResponseEntity.internalServerError().body(ApiResponse.error("筆記刪除失敗: " + e.getMessage()));
         }
     }
+
+    // 共享筆記給特定用戶
+    @PostMapping("/{id}/share")
+    public ResponseEntity<ApiResponse<String>> shareNote(
+        @PathVariable int id, 
+        @RequestBody Map<String, List<Integer>> payload) {
+
+        try {
+            List<Integer> userIds = payload.get("userIds");
+
+            int rows = notebookService.shareNote(id, userIds);
+            return ResponseEntity.ok(ApiResponse.success("筆記已共享成功，共享 " + rows + " 位用戶", null));
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ApiResponse.error("筆記共享失敗: " + e.getMessage()));
+        }
+    }
+
+    // 查被共享給自己的筆記
+    @GetMapping("/shared-notes")
+    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getSharedNotes(HttpServletRequest request) {
+        try {
+            String authHeader = request.getHeader("Authorization");
+            String token = authHeader.substring(7);
+            String account = JwtUtil.extractAccount(token);
+
+            List<Map<String, Object>> sharedNotes = notebookService.getSharedNotes(account);
+            return ResponseEntity.ok(ApiResponse.success("查詢成功", sharedNotes));
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ApiResponse.error("查詢共享筆記失敗: " + e.getMessage()));
+        }
+    }
+
+    // 取消共享
+    @DeleteMapping("/{id}/share/{userId}")
+    public ResponseEntity<ApiResponse<String>> unshareNote(@PathVariable int id, @PathVariable int userId) {
+        try {
+            int rows = notebookService.unshareNote(id, userId);
+            return ResponseEntity.ok(ApiResponse.success("已取消共享", null));
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(ApiResponse.error("取消共享失敗: " + e.getMessage()));
+        }
+    }
 }
 
